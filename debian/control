@@ -1,0 +1,15 @@
+Source: scanbd
+Section: misc
+Priority: optional
+Maintainer: Rolf Leggewie <foss@rolf.leggewie.biz>
+Build-Depends: debhelper (>= 9), libconfuse-dev,
+ libsane-dev, libudev-dev, libusb-dev
+Standards-Version: 3.9.4
+Homepage: http://scanbd.sf.net/
+Vcs-Browser: http://git.debian.org/?p=collab-maint/pastebinit.git
+Vcs-Git: git://git.debian.org/collab-maint/pastebinit.git
+
+Package: scanbd
+Architecture: any
+Depends: ${misc:Depends}
+Description: scanbd description

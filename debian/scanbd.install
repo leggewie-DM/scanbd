@@ -1,0 +1,8 @@
+# Conflicts with systemd:
+#integration/sane-port   usr/share/reconf-inetd/
+
+integration/scanbd_dbus.conf    etc/dbus-1/system.d/
+integration/systemd/scanbd.service  lib/systemd/system/
+integration/systemd/scanbm.socket   lib/systemd/system/
+integration/systemd/scanbm@.service lib/systemd/system/
+integration/systemd/de.kmux.scanbd.server.service   usr/share/dbus-1/system-services/

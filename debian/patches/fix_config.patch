@@ -1,0 +1,24 @@
+Author: Philipp Hahn <pmhahn@debian.org>
+
+Reduce log level to prevent log spamming.
+Use group scanner.
+--- a/conf/scanbd.conf
++++ b/conf/scanbd.conf
+@@ -30,7 +30,7 @@ global {
+ 
+         # debug logging
+         # 1=error, 2=warn, 3=info, 4-7=debug
+-        debug-level = 7
++        debug-level = 2
+         
+         # drop priviliges to this user
+         #=============================
+@@ -52,7 +52,7 @@ global {
+         # *BSD (no group lp here, use daemon instead)
+         # group   = daemon # root
+         #
+-        group   = lp
++        group   = scanner
+ 
+         # the saned executable for manager-mode
+         saned   = "/usr/sbin/saned"

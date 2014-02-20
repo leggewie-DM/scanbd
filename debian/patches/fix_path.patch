@@ -1,0 +1,72 @@
+Author: Philipp Hahn <pmhahn@debian.org>
+
+Fix path of binary and configuration file for Debian package.
+--- a/integration/sane-port
++++ b/integration/sane-port
+@@ -5,7 +5,7 @@ service sane-port
+         wait        = no
+         user        = saned
+         group       = scanner
+-        server      = /usr/local/bin/scanbm
+-        server_args = scanbm -c /usr/local/etc/scanbd/scanbd.conf
++        server      = /usr/sbin/scanbm
++        server_args = scanbm -c /etc/scanbd/scanbd.conf
+         disable     = no
+ }
+--- a/integration/scanbd.debian
++++ b/integration/scanbd.debian
+@@ -37,8 +37,8 @@
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin
+ DESC="SANE scanner button daemon"
+ NAME=scanbd
+-DAEMON=/usr/local/bin/$NAME
+-DAEMON_ARGS="-c /usr/local/etc/scanbd/scanbd.conf"
++DAEMON=/usr/sbin/$NAME
++DAEMON_ARGS="-c /etc/scanbd/scanbd.conf"
+ PIDFILE=/var/run/$NAME.pid
+ SCRIPTNAME=/etc/init.d/$NAME
+ 
+@@ -65,7 +65,7 @@ do_start()
+ 	#   1 if daemon was already running
+ 	#   2 if daemon could not be started
+         
+-        export SANE_CONFIG_DIR=/usr/local/etc/scanbd
++        export SANE_CONFIG_DIR=/etc/scanbd
+ 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+ 		|| return 1
+ 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- \
+--- a/integration/scanbdservice.conf
++++ b/integration/scanbdservice.conf
+@@ -30,10 +30,10 @@ respawn
+ # let this env-var point to the place where the real sane configs are
+ # strip down the /etc/sane/dll.conf to the net-backend
+ 
+-env SANE_CONFIG_DIR=/usr/local/etc/scanbd
++env SANE_CONFIG_DIR=/etc/scanbd
+ 
+ pre-start script
+ 	  rm -f /var/run/scanbd.pid
+ end script
+ 
+-exec /usr/local/bin/scanbd -f -c /usr/local/etc/scanbd/scanbd.conf
++exec /usr/sbin/scanbd -f -c /etc/scanbd/scanbd.conf
+--- a/conf/scanbd.conf
++++ b/conf/scanbd.conf
+@@ -57,7 +57,7 @@ global {
+         # the saned executable for manager-mode
+         saned   = "/usr/sbin/saned"
+         saned_opt  = {} # string-list
+-        saned_env  = { "SANE_CONFIG_DIR=/usr/local/etc/scanbd" } # list of environment vars for saned
++        saned_env  = { "SANE_CONFIG_DIR=/etc/scanbd" } # list of environment vars for saned
+ 
+         # Scriptdir specifies where scanbd normally looks for scripts.
+         # The scriptdir option can be defined as: 
+@@ -88,7 +88,7 @@ global {
+         # as an absolute path
+         # Default is <libdir>/scanbd/scanbutond/backends
+         # Example
+-	# scanbuttond_backends_dir = "/usr/local/lib/scanbd/scanbuttond/backends"
++	# scanbuttond_backends_dir = "/usr/lib/scanbd/scanbuttond/backends"
+ 
+         # poll timeout in [ms]
+         # (for polling the devices)

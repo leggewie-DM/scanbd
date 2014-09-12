@@ -1,5 +1,5 @@
 /*
- * $Id: scanbd_dbus.h 154 2013-01-06 07:24:56Z wimalopaan $
+ * $Id: scanbd_dbus.h 183 2013-08-13 07:03:45Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
@@ -24,17 +24,16 @@
 #define SCANBD_DBUS_H
 
 #ifndef _GNU_SOURCE
-#define _GNU_SOURCE
+# define _GNU_SOURCE
 #endif
 
 #include "common.h"
 #include "slog.h"
 
 #include <dbus-1.0/dbus/dbus.h>
-//#include <dbus-1.0/dbus/dbus-bus.h>
 
 #ifdef USE_HAL
-#include <hal/libhal.h>
+# include <hal/libhal.h>
 #endif
 
 // dbus interface

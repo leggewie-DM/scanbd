@@ -1,4 +1,4 @@
-$Id: README.txt 171 2013-01-28 16:08:25Z llagendijk $
+$Id: README.txt 187 2013-08-25 10:05:17Z wimalopaan $
 
 scanbd - KMUX scanner button daemon
 
@@ -68,9 +68,9 @@ There are two general options for building scanbd: using configure (preferred)
 (see 1.2) or using the (old) simple Makefiles (see 1.3). 
 
 ===============================================================================
-Please note that scanbd is now installed in <prefi./sbin instead of 
+Please note that scanbd is now installed in <prefix>/sbin instead of
 <prefix>/bin. Please manually remove the old scanbd/scanbm binaries from
-<prefix/bin.
+<prefix>/bin.
 ==============================================================================
 
 ===============================================================================
@@ -84,12 +84,9 @@ shown below therefore use gmake
 This chapter lists packages that are known to be required for compilation of 
 scanbd on different platforms. The list may not be exhaustive.
 
-1.1.1 Debian
+1.1.1) Debian
 Needed packages on debian-based systems:
 libconfuse-dev libsane-dev libudev-dev libusb-dev
-To use HAL instead of libudev you need:
-libhal-dev
-
 To use HAL instead of libudev you need:
 libhal-dev
 
@@ -97,7 +94,16 @@ libhal-dev
 Needed packages in Fedora systems:
 libusb-devel libconfuse-devel libudev-devel dbus-devel sane-backends-devel
 
-1.1.3 Hint to ArchLinux users using old scanbuttond drivers:
+1.1.3) ArchLinux
+
+Needed additional packages in ArchLinux systems:
+confuse libusbx libusb-compat
+
+ArchLinux normally doesn't have the user saned if you install the sane package.
+You can use the daemon user instead of saned and the group scanner (please adjust
+scanbd.conf file, see below)
+
+(outdated hint)
 The libusb / libusb-compat seems to be broken for at least using it with the 
 old scanbuttond drivers.  Please find under contrib a PKGBUILD to build an old 
 version of libusb-compat at your own risk (other applications may fail now). 
@@ -108,9 +114,9 @@ makepkg
 makepkg -i
 
 and (re)build scanbd:
-USE_SCANBUTTOND=yes gmake -e clean all
+USE_SCANBUTTOND=yes gmake -e -f Makefile.simple clean all
 
-1.1.4 Suse
+1.1.4) Suse
 On Suse based systems you will need the same of similar packages installed as
 on Fedora, but: sane-backends-devel in Suse does not pull in all required 
 dependencies. Please make sure that you alse have installed:
@@ -119,7 +125,7 @@ libexif-devel
 libgphoto2-devel
 before you attempt compilation of scanbd.
 
-1.1.5 OpenBSD:
+1.1.5) OpenBSD:
 You need to install the following packages from ports ($PORTSDIR is here the
 directory where you have the ports collection installed, normally /usr/ports):
 
@@ -132,10 +138,12 @@ sane-backends: $PORTSDIR/graphics/sane-backends
 
 Please execute:
 
-./configure [--enable-scanbuttond]
+./configure [--enable-scanbuttond] [--enable-hal] [--enable-udev]
 gmake all
 
-The use of HAL instead of libudev is now detected via configure. 
+The use of HAL instead of libudev is now detected via configure. If you want to override
+this, use --enable-hal or --enable-udev.
+
 If you want to use the scanbuttond-backends instead of sane-backends, use 
 --enable-scanbuttond for configure.
 
@@ -153,7 +161,7 @@ If you don't want to use the configure script to generate the Makefiles, you
 can still use the (old) Makefile.simple as an input-file for the make tool.
 
 Options can be set in Makefile.conf. This file will be generated the first time
-you run "gmake -f Makefile.simple" from Makefile.conf.in. 
+you run "gmake -f Makefile.simple" from Makefile.conf.in.
 
 Please review Makefile.conf (after running gmake -f Makefile.simple) before
 running make again. Edit the file as appropriate to set your preferences.
@@ -259,7 +267,7 @@ Now the desktop applications (wich use libsane) use the above dll.conf with only
 the net backend. This prevents them from using the locally attached scanners 
 directly (and blocking them). 
 
-example net.conf remove the comments from the appropriate lines!
+example saned.conf remove the comments from the appropriate lines!
 ---
 connect_timeout = 3
 scanbd-host1.local.net   # the host with the scanbd running 
@@ -293,7 +301,7 @@ So as a safe rule:
 - copy all config-files from /etc/sane.d to /usr/local/etc/scanbd and edit 
 dll.conf as stated above (not include the net backend)
 
-6) start scanbd 
+7) start scanbd
 
 e.g.:
 
@@ -314,7 +322,7 @@ buttons. If you press the buttons or modify the function knob or insert/remove
 sheets of paper some of the options / buttons must change their value.
 Theses value changes can be used to define actions in scanbd.conf.
 
-7) some words on access rights
+8) some words on access rights
 
 if the saned-user can't access the scanners, e.g. if 
 
@@ -339,7 +347,7 @@ usermod -a -G lp saned
 
 Also edit/check scanbd.conf to set the effective group = lp !
 
-8) Additional hints:
+9) Additional hints:
 
 - if you are using scanner devices that don't support usb-autosuspend, please find
   an udev-rule 98-snapscan.rule in the integration directory. You can put this into
@@ -389,7 +397,7 @@ Also edit/check scanbd.conf to set the effective group = lp !
   Or use a web based application for scanning (see the frontends documentation 
   on the sane-project page)
 
-9) Actual problems
+10) Actual problems
 
 - if you use USE_SCANBUTTOND: the usb-device can't be opened if another 
   applications (say cupsd) does the same. In this case scanbd stops polling the 
@@ -404,7 +412,7 @@ Also edit/check scanbd.conf to set the effective group = lp !
   compile scanbd with USE_LIBUDEV=yes. If you don't have hal and libudev e.g. 
   OpenBSD, dynamic recognition of scanners isn't possible.
 
-10) TODO
+11) TODO
 - refactor dbus.c, udev.c
 - make a clean rewrite using boost/Qt
 - make a UI to list options/buttons, watch value changes an setup actions

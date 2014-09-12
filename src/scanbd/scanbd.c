@@ -1,5 +1,5 @@
 /*
- * $Id: scanbd.c 168 2013-01-12 10:41:22Z llagendijk $
+ * $Id: scanbd.c 188 2013-08-29 19:30:24Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
@@ -23,8 +23,8 @@
 #include "scanbd.h"
 
 #ifdef USE_SCANBUTTOND
-#include "scanbuttond_loader.h"
-#include "scanbuttond_wrapper.h"
+# include "scanbuttond_loader.h"
+# include "scanbuttond_wrapper.h"
 backend_t* backend = NULL;
 #endif
 #include <libgen.h>
@@ -227,7 +227,7 @@ int main(int argc, char** argv) {
     // install the SIGHUP handler also for SIGALARM
     // SIGALARM is used if there is a open failure of the
     // scanbuutond backends, possible cause is a device scanning from other
-    // prosesses like cupsd
+    // processes like cupsd
     if (sigaction(SIGALRM, &sa, NULL) < 0) {
         slog(SLOG_ERROR, "Can't install signalhandler for SIGALARM: %s", strerror(errno));
         exit(EXIT_FAILURE);

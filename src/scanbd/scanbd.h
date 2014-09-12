@@ -1,5 +1,5 @@
 /*
- * $Id: scanbd.h 170 2013-01-26 22:38:18Z llagendijk $
+ * $Id: scanbd.h 191 2013-09-23 09:55:27Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
@@ -24,12 +24,14 @@
 #define SCANBD_H
 
 #ifndef USE_SANE
-#ifndef USE_SCANBUTTOND
-#define USE_SCANBUTTOND
-#endif
+# ifndef USE_SCANBUTTOND
+#  define USE_SCANBUTTOND
+# endif
 #endif
 
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
 
 #include "common.h"
 
@@ -37,9 +39,9 @@
 #include <confuse.h>
 
 #ifdef USE_SANE
-#include <sane/sane.h>
+# include <sane/sane.h>
 #else
-#include <scanbuttond/libusbi.h>
+# include <scanbuttond/libusbi.h>
 #endif
 
 #include "config.h"
@@ -111,6 +113,11 @@
 
 #define C_SCRIPTDIR "scriptdir"
 #define C_SCRIPTDIR_DEF ""
+
+#define C_DEVICE_INSERT_SCRIPT "device_insert_script"
+#define C_DEVICE_INSERT_SCRIPT_DEF ""
+#define C_DEVICE_REMOVE_SCRIPT "device_remove_script"
+#define C_DEVICE_REMOVE_SCRIPT_DEF ""
 
 #define C_SCANBUTTONS_BACKENDS_DIR "scanbuttond_backends_dir"
 #ifdef SCANBUTTOND_LIB_DIR

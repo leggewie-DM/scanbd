@@ -3,7 +3,7 @@ Author: Philipp Hahn <pmhahn@debian.org>
 Fix path of binary and configuration file for Debian package.
 --- a/integration/sane-port
 +++ b/integration/sane-port
-@@ -5,7 +5,7 @@
+@@ -5,7 +5,7 @@ service sane-port
          wait        = no
          user        = saned
          group       = scanner
@@ -15,7 +15,7 @@ Fix path of binary and configuration file for Debian package.
  }
 --- a/integration/scanbd.debian
 +++ b/integration/scanbd.debian
-@@ -16,8 +16,8 @@
+@@ -37,8 +37,8 @@
  PATH=/sbin:/usr/sbin:/bin:/usr/bin
  DESC="SANE scanner button daemon"
  NAME=scanbd
@@ -26,7 +26,7 @@ Fix path of binary and configuration file for Debian package.
  PIDFILE=/var/run/$NAME.pid
  SCRIPTNAME=/etc/init.d/$NAME
  
-@@ -44,7 +44,7 @@
+@@ -65,7 +65,7 @@ do_start()
  	#   1 if daemon was already running
  	#   2 if daemon could not be started
          
@@ -37,7 +37,7 @@ Fix path of binary and configuration file for Debian package.
  	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- \
 --- a/integration/scanbdservice.conf
 +++ b/integration/scanbdservice.conf
-@@ -30,10 +30,10 @@
+@@ -30,10 +30,10 @@ respawn
  # let this env-var point to the place where the real sane configs are
  # strip down the /etc/sane/dll.conf to the net-backend
  
@@ -52,19 +52,16 @@ Fix path of binary and configuration file for Debian package.
 +exec /usr/sbin/scanbd -f -c /etc/scanbd/scanbd.conf
 --- a/conf/scanbd.conf
 +++ b/conf/scanbd.conf
-@@ -55,9 +55,9 @@
+@@ -57,7 +57,7 @@ global {
          # the saned executable for manager-mode
          saned   = "/usr/sbin/saned"
          saned_opt  = {} # string-list
 -        saned_env  = { "SANE_CONFIG_DIR=/usr/local/etc/scanbd" } # list of environment vars for saned
 +        saned_env  = { "SANE_CONFIG_DIR=/etc/scanbd" } # list of environment vars for saned
  
--        # Scriptdir specifies where scanbs normally looks for scripts.
-+        # Scriptdir specifies where scanbd normally looks for scripts.
+         # Scriptdir specifies where scanbd normally looks for scripts.
          # The scriptdir option can be defined as: 
-         #   - a path relative to the configuations (<path>/etc/scanbd) directory
-         #   - an abosolute path
-@@ -74,7 +74,7 @@
+@@ -88,7 +88,7 @@ global {
          # as an absolute path
          # Default is <libdir>/scanbd/scanbutond/backends
          # Example

@@ -1,0 +1,8 @@
+Testing for button support
+==========================
+
+1) attach scanner to your computer
+2) start "scanbd -f" from the command line
+3) press one of the buttons
+
+You should see a log entry printed to your screen now

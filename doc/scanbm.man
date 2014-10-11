@@ -1,8 +1,8 @@
-.\" $Id: scanbm.man 166 2013-01-11 19:40:10Z llagendijk $
+.\" $Id: scanbm.man 190 2013-09-02 06:19:37Z wimalopaan $
 .TH scanbm 8 "02 Jan 2013" "@PACKAGENAME@ @PACKAGEVERSION@" "Scanner button daemon"
 .IX scanbm
 .SH NAME
-scanbm\- User scanning suppport daemon for scanbd / scanbd manager
+scanbm\- User scanning support daemon for scanbd / scanbd manager
 .SH SYNOPSIS
 .B scanbm
 .B [\-c 

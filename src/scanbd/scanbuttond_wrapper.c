@@ -1,5 +1,5 @@
 /*
- * $Id: scanbuttond_wrapper.c 154 2013-01-06 07:24:56Z wimalopaan $
+ * $Id: scanbuttond_wrapper.c 192 2013-10-09 05:12:46Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
@@ -472,7 +472,11 @@ void* scbtn_poll(void* arg) {
         slog(SLOG_DEBUG, "polling device %s", st->dev->product);
 
         int button = backend->scanbtnd_get_button((scanner_t*)st->dev);
-        slog(SLOG_INFO, "button %d", button);
+        if (button) {
+            slog(SLOG_INFO, "################ button %d pressed ################", button);
+        } else {
+            slog(SLOG_INFO, "button %d", button);
+        }
 
         for(si = 0; si < st->num_of_options_with_scripts; si += 1) {
             //	    const scbtn_Option_Descriptor* odesc = NULL;
@@ -911,7 +915,7 @@ void stop_scbtn_threads() {
         backend->scanbtnd_close((scanner_t*)scbtn_poll_threads[i].dev);
 
         if (scbtn_poll_threads[i].opts) {
-            slog(SLOG_DEBUG, "freeing opt ressources for device %s thread",
+            slog(SLOG_DEBUG, "freeing opt resources for device %s thread",
                  scbtn_poll_threads[i].dev->product);
             // free the matching options list of that device / threads
             //	    for (int k = 0; k < scbtn_poll_threads[i].num_of_options; k += 1) {
@@ -923,7 +927,7 @@ void stop_scbtn_threads() {
             scbtn_poll_threads[i].opts = NULL;
         }
         if (scbtn_poll_threads[i].functions) {
-            slog(SLOG_DEBUG, "freeing funtion ressources for device %s thread",
+            slog(SLOG_DEBUG, "freeing function resources for device %s thread",
                  scbtn_poll_threads[i].dev->product);
             free(scbtn_poll_threads[i].functions);
             scbtn_poll_threads[i].functions = NULL;
@@ -1033,27 +1037,31 @@ void scbtn_shutdown(void)
 
 const char* scanbtnd_button_name(const backend_t* backend, unsigned int button) {
     slog(SLOG_INFO, "scanbtnd_button_name (%d)", button);
+    assert(backend);
     const char* backend_name = backend->scanbtnd_get_backend_name();
-    slog(SLOG_INFO, "scanbtnd_button_name, backend: %s", backend_name);
     assert(backend_name);
+    slog(SLOG_INFO, "scanbtnd_button_name, backend: %s", backend_name);
 
     if (strcmp("snapscan", backend_name)) {
-        assert(button <= 4);
+        assert(button <= 5);
         switch(button) {
         case 0:
             return NULL;
             break;
         case 1:
-            return "web";
+            return "scan"; // "web";
             break;
         case 2:
-            return "email";
+            return "copy"; // "email";
             break;
         case 3:
-            return "copy";
+            return "email"; // "copy";
             break;
         case 4:
-            return "send";
+            return "pdf"; // "send";
+            break;
+        case 5:
+            return "stop";
             break;
         default:
             return NULL;

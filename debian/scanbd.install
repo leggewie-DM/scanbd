@@ -1,3 +1,5 @@
+debian/tmp/* /
+
 # Conflicts with systemd:
 #integration/sane-port   usr/share/reconf-inetd/
 

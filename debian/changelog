@@ -1,3 +1,13 @@
+scanbd (1.4.0-1x1) experimental; urgency=medium
+
+  * upload to experimental to allow transition of 1.4.0-1 to testing
+  * docs: add README.Debian and ship upstream README.txt
+  * control: bump to standard 3.9.6. No further changes.
+  * properly handle the (patched) upstream SysV init-script file
+  * drop explicit creation of /etc/dbus-1/ directory in binary package
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Wed, 15 Oct 2014 15:56:22 +0800
+
 scanbd (1.4.0-1) unstable; urgency=low
 
   * Initial release (Closes: #695435)

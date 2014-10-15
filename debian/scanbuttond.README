@@ -1,0 +1,14 @@
+What happened to scanbuttond?
+
+scanbd is the successor to scanbuttond in Debian.
+
+So, what now?
+
+As a courtesy we provide a wrapper script that should work as
+a drop-in replacement. Simply set the value of the "script"
+variable to "scanbuttond_compat.script" everywhere in
+/etc/scanbd/scanbd.conf.
+
+Once you are comfortable with scanbd you can migrate away from
+the wrapper and use the scanbd scripts directly.  Report a bug if
+you run into trouble with your setup.

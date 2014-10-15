@@ -32,3 +32,15 @@ Description: Scanner button daemon
  sane-backends or some special backends from the (old) scanbuttond project.
  .
  This package is a successor of scanbuttond.
+
+Package: scanbuttond
+Architecture: all
+Depends: scanbd
+Section: oldlibs
+Priority: extra
+Description: Dummy transitional package - scanbuttond to scanbd
+ This package is meant to ease migration from the old, dead scanbuttond
+ package to the new scanbd. It pulls in scanbd and installs a wrapper
+ script so that scanbd should be a drop-in replacement.  Users should
+ eventually migrate their customized scripts to scanbd and then this
+ package can be safely removed.

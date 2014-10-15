@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# compatibility wrapper to run scanbuttond scripts from scanbd
+#
+#  Copyright (C) 2014 Rolf Leggewie <foss@rolf.leggewie.biz>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+
+# look in scanbd.conf for environment variables
+
+SCANBUTTOND_SCRIPT="/etc/scanbuttond/buttonpressed.sh"
+
+logger -t "scanbuttond wrapper: $0" "Begin of $SCANBD_ACTION for device $SCANBD_DEVICE"
+
+# printout all env-variables
+/usr/bin/printenv > `mktemp -t scanbd.script.env.XXXXXXXXXX`
+
+# make the assignment between button name and number configurable?
+case $SCANBD_ACTION in
+	print)
+		BUTTON=1
+	;;
+	copy)
+		BUTTON=2
+	;;
+	pdf)
+		BUTTON=3
+	;;
+	mail)
+		BUTTON=4
+	;;
+	*)
+		logger -t "scanbuttond wrapper: $0" "Failed to read button name. Please report this as a bug in the Debian bugtracker."
+        exit 1
+	;;
+esac
+
+# make sure the scanbuttond script exists and is readable
+[ \! -r "$SCANBUTTOND_SCRIPT" ] && exit 2
+
+"$SCANBUTTOND_SCRIPT" $BUTTON $SCANBD_DEVICE || exit 3
+
+logger -t "scanbuttond wrapper: $0" "Please consider migrating your script from this wrapper to normal scanbd support"
+logger -t "scanbuttond wrapper: $0" "End of $SCANBD_ACTION for device $SCANBD_DEVICE"
+
+exit 0

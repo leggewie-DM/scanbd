@@ -7,9 +7,7 @@ override_dh_auto_configure:
 	dh_auto_configure -- --with-user=saned --with-group=scanner
 
 override_dh_auto_install:
+	ln -f integration/scanbd.debian debian/scanbd.init
 	dh_auto_install
 	$(RM) debian/scanbd/etc/scanbd/example.script
 	$(RM) debian/scanbd/etc/scanbd/scanadf.script
-
-override_dh_installinit:
-	dh_installinit --init-script=integration/scanbd.debian

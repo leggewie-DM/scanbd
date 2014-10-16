@@ -1,3 +1,14 @@
+scanbd (1.4.0-1x3) experimental; urgency=medium
+
+  * upload to experimental to allow transition of 1.4.0-1 to testing
+  * add scanbuttond migration package. Closes: #728818
+    - add scanbuttond stanza to debian/control (dummy package)
+    - add README for scanbuttond
+    - add scanbuttond compat wrapper script
+    - make sure the dh build system handles the multi-binary case
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Thu, 16 Oct 2014 22:36:17 +0800
+
 scanbd (1.4.0-1x2) experimental; urgency=low
 
   * upload to experimental to allow transition of 1.4.0-1 to testing

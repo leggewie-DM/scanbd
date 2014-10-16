@@ -1,3 +1,12 @@
+scanbd (1.4.0-1x2) experimental; urgency=low
+
+  * upload to experimental to allow transition of 1.4.0-1 to testing
+  * move scripts out of /etc and into /usr/share/scanbd/scripts
+  * patches: improve scanbd description in upstream init script
+  * docs: include AUTHORS file in documentation
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Thu, 16 Oct 2014 13:46:02 +0800
+
 scanbd (1.4.0-1x1) experimental; urgency=medium
 
   * upload to experimental to allow transition of 1.4.0-1 to testing

@@ -3,3 +3,4 @@ fix_quoting.patch
 fix_config.patch
 fix_test.patch
 hardcode_scriptdir_path.patch
+init.patch

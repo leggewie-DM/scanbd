@@ -35,7 +35,7 @@ Description: Scanner button daemon
 
 Package: scanbuttond
 Architecture: all
-Depends: scanbd
+Depends: scanbd, ${misc:Depends}
 Section: oldlibs
 Priority: extra
 Description: Dummy transitional package - scanbuttond to scanbd

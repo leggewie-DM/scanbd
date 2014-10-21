@@ -1,3 +1,11 @@
+scanbd (1.4.0-2) unstable; urgency=low
+
+  * release to unstable now that 1.4.0-1 has hit testing
+  * control: add ${misc:Depends} for scanbuttond binary package
+  * mark scanbuttond_compat.script executable
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Tue, 21 Oct 2014 18:27:44 +0900
+
 scanbd (1.4.0-1x3) experimental; urgency=medium
 
   * upload to experimental to allow transition of 1.4.0-1 to testing

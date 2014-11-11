@@ -37,7 +37,6 @@ Package: scanbuttond
 Architecture: all
 Depends: scanbd, ${misc:Depends}
 Section: oldlibs
-Priority: extra
 Description: Dummy transitional package - scanbuttond to scanbd
  This package is meant to ease migration from the old, dead scanbuttond
  package to the new scanbd. It pulls in scanbd and installs a wrapper

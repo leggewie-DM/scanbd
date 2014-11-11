@@ -1,0 +1,5 @@
+rm_conffile /etc/scanbuttond/buttonpressed.sh.example
+rm_conffile /etc/scanbuttond/meta.conf
+rm_conffile /etc/scanbuttond/initscanner.sh.example
+rm_conffile /etc/default/scanbuttond
+rm_conffile /etc/init.d/scanbuttond

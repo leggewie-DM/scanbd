@@ -1,6 +1,7 @@
 Author: Rolf Leggewie <foss@rolf.leggewie.biz>
 
-improve description for scanbd in init file
+improve description for scanbd in init file and add call to status
+
 Index: scanbd/integration/scanbd.debian
 ===================================================================
 --- scanbd.orig/integration/scanbd.debian	2014-10-16 12:25:25.361209803 +0800
@@ -17,3 +18,17 @@ Index: scanbd/integration/scanbd.debian
  ### END INIT INFO
  
  # Do NOT "set -e"
+@@ -160,9 +159,11 @@
+ 		;;
+ 	esac
+ 	;;
++  status)
++	status_of_proc -p "$PIDFILE" "$DAEMON" "$NAME" && exit 0 || exit $?
++	;;
+   *)
+-	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+-	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
++	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
+ 	exit 3
+ 	;;
+ esac

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# $Id: scanadf.script 154 2013-01-06 07:24:56Z wimalopaan $
+# $Id: scanadf.script 195 2014-11-15 18:06:47Z wimalopaan $
 #
 #  scanbd - KMUX scanner button daemon
 #
@@ -23,7 +23,7 @@
 
 logger -t "scanbd: $0" "Begin of $SCANBD_ACTION for device $SCANBD_DEVICE"
 
-scanner=$(echo $SCANBD_DEVICE | cut -d ':' -f 1)
-scanadf -d $SCANBD_DEVICE -o /tmp/${scanner}_${SCANBD_FUNCTION_MODE}_${SCANBD_FUNCTION} 2>&1 
+scanner=$(echo "$SCANBD_DEVICE" | cut -d ':' -f 1)
+scanadf -d "$SCANBD_DEVICE" -o "/tmp/${scanner}_${SCANBD_FUNCTION_MODE}_${SCANBD_FUNCTION}" 2>&1
 
 logger -t "scanbd: $0" "End   of $SCANBD_ACTION for device $SCANBD_DEVICE"

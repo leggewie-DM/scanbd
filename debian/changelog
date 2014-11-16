@@ -1,3 +1,15 @@
+scanbd (1.4.1-1) experimental; urgency=medium
+
+  * new upstream release 1.4.1
+    - watch: include tgz files in watched files
+    - patches: drop patches that landed upstream and rebase the others
+  * patches:
+    - add "status" call to scanbd init script
+    - drop some info irrelevant to end users from the man pages
+    - document status of patches with regards to upstream
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Sun, 16 Nov 2014 20:27:45 +0800
+
 scanbd (1.4.0-3) experimental; urgency=low
 
   * scanbuttond: remove config for old, superseded package

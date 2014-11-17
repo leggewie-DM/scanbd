@@ -1,4 +1,5 @@
 Author: Rolf Leggewie <foss@rolf.leggewie.biz>
+Bug: https://sourceforge.net/p/scanbd/tickets/1/
 
 Scripts should live under /usr not in /etc
 

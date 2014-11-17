@@ -1,3 +1,6 @@
+Author: Rolf Leggewie <foss@rolf.leggewie.biz>
+Bug: https://sourceforge.net/p/scanbd/tickets/5/
+
 Index: scanbd/doc/scanbd.man
 ===================================================================
 --- scanbd.orig/doc/scanbd.man	2014-11-13 15:51:37.853216865 +0800

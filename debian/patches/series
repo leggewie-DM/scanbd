@@ -1,5 +1,4 @@
 fix_path.patch
 fix_config.patch
 hardcode_scriptdir_path.patch
-init.patch
 manpages.patch

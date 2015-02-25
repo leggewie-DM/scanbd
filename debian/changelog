@@ -1,3 +1,12 @@
+scanbd (1.4.1-2) experimental; urgency=medium
+
+  * rules: do not abort the build on 'clobbered' error. LP: #1403831
+  * Take over maintenance of the init script from upstream
+    - adjust Debian build accordingly
+    - improve robustness dealing with common configuration errors
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Wed, 25 Feb 2015 13:14:21 +0800
+
 scanbd (1.4.1-1) experimental; urgency=medium
 
   * new upstream release 1.4.1

@@ -5,6 +5,7 @@
 #  scanbd - KMUX scanner button daemon
 #
 #  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2013 - 2014  Rolf Leggewie (foss@rolf.leggewie.biz)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -55,6 +56,28 @@ SCRIPTNAME=/etc/init.d/$NAME
 . /lib/lsb/init-functions
 
 #
+# Function to abort on errors
+#
+do_abort()
+{
+	log_failure_msg $1
+###	XXX the following cannot yet be activated since it breaks postinst in case of configuration errors
+#	log_failure_msg scanbd will not be started
+#	exit 128
+}
+
+#
+# Function to check for common configuration mistakes
+#
+do_check_config()
+{
+	grep '^connect_timeout' /etc/sane.d/dll.conf > /dev/null || log_warning_msg "/etc/sane.d/net.conf should contain a value for connect_timeout"
+	egrep -v '(net|^#|^$)'  /etc/sane.d/dll.conf > /dev/null && do_abort "/etc/sane.d/dll.conf should contain only the net backend"
+	egrep -x '(net)'        /etc/sane.d/dll.conf > /dev/null || do_abort "/etc/sane.d/dll.conf should contain the net backend"
+	egrep -x '(net)'        /etc/scanbd/dll.conf > /dev/null && do_abort "/etc/scanbd/dll.conf must not contain the net backend"
+}
+
+#
 # Function that starts the daemon/service
 #
 do_start()
@@ -64,7 +87,8 @@ do_start()
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
 
-        export SANE_CONFIG_DIR=/etc/scanbd
+	export SANE_CONFIG_DIR=/etc/scanbd
+	do_check_config
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
 		|| return 1
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- \

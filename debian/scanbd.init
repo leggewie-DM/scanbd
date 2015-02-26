@@ -64,6 +64,7 @@ do_abort()
 ###	XXX the following cannot yet be activated since it breaks postinst in case of configuration errors
 #	log_failure_msg scanbd will not be started
 #	exit 128
+	exit 0
 }
 
 #

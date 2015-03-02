@@ -20,7 +20,7 @@ case "$1" in
 	  case $backend in
 	    dll|dc210|dc240|dc25|dmc|gphoto2|net|saned|test|v4l)
 	      # do nothing in particular, this config file does not represent a scanbd-supported backend
-	      [ -L $scanbd/$backend.conf ] && logger "$backend is not a scanbd-supported backend. You should consider removing the link /etc/$file."
+	      [ -L scanbd/$backend.conf ] && logger "$backend is not a scanbd-supported backend. You should consider removing the link /etc/scanbd/$backend.conf."
 	    ;;
 	    *)
 	      # create a link to the saned backend, unless the link or file already exists (possibly with customized content)

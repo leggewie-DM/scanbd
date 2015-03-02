@@ -8,5 +8,6 @@ integration/systemd/scanbd.service  lib/systemd/system/
 integration/systemd/scanbm.socket   lib/systemd/system/
 integration/systemd/scanbm@.service lib/systemd/system/
 integration/systemd/de.kmux.scanbd.server.service   usr/share/dbus-1/system-services/
+integration/99-saned.rules lib/udev/rules.d/
 
 debian/*/etc/scanbd/*.script usr/share/scanbd/scripts/

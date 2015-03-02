@@ -18,7 +18,7 @@ case "$1" in
 	for file in sane.d/*.conf; do
 	  backend=$(basename -s .conf $file)
 	  case $backend in
-	    dll|net|saned|test|v4l)
+	    dll|dc210|dc240|dc25|dmc|gphoto2|net|saned|test|v4l)
 	      # do nothing in particular, this config file does not represent a scanbd-supported backend
 	      [ -L $scanbd/$backend.conf ] && logger "$backend is not a scanbd-supported backend. You should consider removing the link /etc/$file."
 	    ;;

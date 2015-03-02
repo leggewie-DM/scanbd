@@ -72,7 +72,7 @@ do_abort()
 #
 do_check_config()
 {
-	grep '^connect_timeout' /etc/sane.d/dll.conf > /dev/null || log_warning_msg "/etc/sane.d/net.conf should contain a value for connect_timeout"
+	grep '^connect_timeout' /etc/sane.d/net.conf > /dev/null || log_warning_msg "/etc/sane.d/net.conf should contain a value for connect_timeout"
 	egrep -v '(net|^#|^$)'  /etc/sane.d/dll.conf > /dev/null && do_abort "/etc/sane.d/dll.conf should contain only the net backend"
 	egrep -x '(net)'        /etc/sane.d/dll.conf > /dev/null || do_abort "/etc/sane.d/dll.conf should contain the net backend"
 	egrep -x '(net)'        /etc/scanbd/dll.conf > /dev/null && do_abort "/etc/scanbd/dll.conf must not contain the net backend"

@@ -31,7 +31,7 @@ case "$1" in
 	  esac
 	done
 	mv -n $TEMPFILE /etc/scanbd/dll.conf
-	cd -
+	cd - > /dev/null
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

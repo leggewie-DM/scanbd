@@ -76,6 +76,7 @@ do_check_config()
 	egrep -v '(net|^#|^$)'  /etc/sane.d/dll.conf > /dev/null && do_abort "/etc/sane.d/dll.conf should contain only the net backend"
 	egrep -x '(net)'        /etc/sane.d/dll.conf > /dev/null || do_abort "/etc/sane.d/dll.conf should contain the net backend"
 	egrep -x '(net)'        /etc/scanbd/dll.conf > /dev/null && do_abort "/etc/scanbd/dll.conf must not contain the net backend"
+	pidof saned > /dev/null && do_abort "It was detected that saned is already running. This will lead to problems. scanbd will not be started. Please stop saned before trying again. Most likely you activated RUN=yes in /etc/default/saned.  Change that to 'no'."
 }
 
 #

@@ -32,6 +32,7 @@ case "$1" in
 	done
 	mv -n $TEMPFILE /etc/scanbd/dll.conf
 	cd - > /dev/null
+	update-inetd --add 'sane-port stream tcp nowait saned /usr/sbin/scanbm scanbm'
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -14,6 +14,7 @@ Package: scanbd
 Architecture: any
 Depends: sane-utils,
  openbsd-inetd | inet-superserver,
+ update-inetd,
 # reconf-inetd,
  ${shlibs:Depends},
  ${misc:Depends},

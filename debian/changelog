@@ -1,3 +1,22 @@
+scanbd (1.4.1-4) experimental; urgency=medium
+
+  * postinst:
+    - add a few camera config files to the scanbd unsupported list
+    - fix test for unsupported backends
+      both the test for links to unsupported backends and the suggested
+      remedy were faulty
+    - suppress unnecessary feedback from "cd -" command
+    - update /etc/inetd.conf via update-inetd in postinst and postrm
+  * scanbd.init:
+    - abort startup of scanbd when saned is already running
+    - test for connect_timeout value in the correct file
+  * ship upstream udev rules file
+  * control: add an inetd server and update-inetd to the runtime-dependencies
+  * doc: update Debian README to reflect the recent work
+  * copyright: update my copyright to 2015
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Wed, 04 Mar 2015 18:16:00 +0800
+
 scanbd (1.4.1-3) experimental; urgency=medium
 
   * configure the backends automatically as much as possible. LP: #1401389

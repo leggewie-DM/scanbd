@@ -13,6 +13,7 @@ Vcs-Git: git://git.debian.org/collab-maint/scanbd.git
 Package: scanbd
 Architecture: any
 Depends: sane-utils,
+ openbsd-inetd | inet-superserver,
 # reconf-inetd,
  ${shlibs:Depends},
  ${misc:Depends},

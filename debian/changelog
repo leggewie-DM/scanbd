@@ -1,3 +1,10 @@
+scanbd (1.4.1-5) experimental; urgency=medium
+
+  * postrm: make sure update-inetd is actually present and executable
+    before calling it. Closes: #779867
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Sun, 08 Mar 2015 17:41:02 +0800
+
 scanbd (1.4.1-4) experimental; urgency=medium
 
   * postinst:

@@ -7,7 +7,9 @@ case "$1" in
     purge)
       find /etc/scanbd -maxdepth 0 -type l -name *.conf -delete
       rm -f /etc/scanbd/dll.conf
-      update-inetd --remove 'sane-port'
+      if [ -x /usr/sbin/update-inetd ]; then
+        update-inetd --remove 'sane-port'
+      fi
     ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;

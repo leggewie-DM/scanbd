@@ -4,7 +4,8 @@ Priority: extra
 Maintainer: Rolf Leggewie <foss@rolf.leggewie.biz>
 Build-Depends: debhelper (>= 9), autotools-dev,
  libconfuse-dev,
- libsane-dev, libudev-dev, libusb-dev
+ libsane-dev, libudev-dev, libusb-dev,
+ pkg-config, libdbus-1-dev
 Standards-Version: 3.9.6
 Homepage: http://scanbd.sf.net/
 Vcs-Browser: http://git.debian.org/?p=collab-maint/scanbd.git

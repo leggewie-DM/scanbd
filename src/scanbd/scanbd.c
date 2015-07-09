@@ -1,9 +1,9 @@
 /*
- * $Id: scanbd.c 188 2013-08-29 19:30:24Z wimalopaan $
+ * $Id: scanbd.c 203 2015-02-04 08:05:20Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -632,6 +632,12 @@ int main(int argc, char** argv) {
         dbus_init();
 
 #ifdef USE_SANE
+        if (getenv("SANE_CONFIG_DIR") != NULL) {
+            slog(SLOG_DEBUG, "SANE_CONFIG_DIR=%s", getenv("SANE_CONFIG_DIR"));
+        }
+        else {
+            slog(SLOG_WARN, "SANE_CONFIG_DIR not set");
+        }
         // Init SANE
         SANE_Int sane_version = 0;
         sane_init(&sane_version, 0);

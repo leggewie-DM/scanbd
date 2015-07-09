@@ -1,4 +1,4 @@
-$Id: README.txt 187 2013-08-25 10:05:17Z wimalopaan $
+$Id: README.txt 202 2014-12-12 08:14:39Z wimalopaan $
 
 scanbd - KMUX scanner button daemon
 
@@ -249,6 +249,9 @@ Make some useful scripts (see the examples test.script, example.script or
 scanadf.script) (scanbd compiles and runs well on FreeBSD/NetBDS/OpenBSD, 
 but on these plattforms /bin/bash is usually not avaliable. So be sure to adapt
 the scripts!)
+
+Hint: please try using scanimage and/or scanadf to scan - even single pages with
+scanadf. Users reported that sometimes scanimage hangs for the second scan!
 
 6) sane config
 

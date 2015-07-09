@@ -1,9 +1,9 @@
 /*
- * $Id: scanbuttond_wrapper.c 192 2013-10-09 05:12:46Z wimalopaan $
+ * $Id: scanbuttond_wrapper.c 203 2015-02-04 08:05:20Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

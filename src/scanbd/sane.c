@@ -1,9 +1,9 @@
 /*
- * $Id: sane.c 190 2013-09-02 06:19:37Z wimalopaan $
+ * $Id: sane.c 210 2015-06-09 06:51:58Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -606,7 +606,8 @@ static void* sane_poll(void* arg) {
     sigfillset(&mask);
     pthread_sigmask(SIG_BLOCK, &mask, NULL);
     
-    static int si = 0;
+//    static int si = 0; // don't know why this was a static variable -> nonsense in the case of multiple sane_poll threads
+    int si = 0;
 
     // this thread uses the device and the san_thread_t datastructure
     // lock it
@@ -896,6 +897,7 @@ static void* sane_poll(void* arg) {
                         v = get_sane_option_value(st->h, st->functions[e].number);
                     }
                     else {
+                        slog(SLOG_DEBUG, "don't re-get the value");
                     }
                     if ((fdesc->type == SANE_TYPE_BOOL) || (fdesc->type == SANE_TYPE_INT) ||
                             (fdesc->type == SANE_TYPE_FIXED) || (odesc->type == SANE_TYPE_BUTTON)) {
@@ -1045,6 +1047,17 @@ static void* sane_poll(void* arg) {
                     }
                     else { // child
                         slog(SLOG_DEBUG, "exec for %s", script_abs);
+                        if (access(script_abs, F_OK | X_OK) < 0) {
+                            slog(SLOG_ERROR, "access: %s", strerror(errno));
+                        }
+                        struct stat stat_buf;
+                        if (stat(script_abs, &stat_buf) < 0) {
+                            slog(SLOG_ERROR, "stat: %s", strerror(errno));
+                        }
+                        else {
+                            slog(SLOG_DEBUG, "octal mode for %s: %lo", script_abs, stat_buf.st_mode);
+                            slog(SLOG_DEBUG, "uid: %ld, gid: %ld", stat_buf.st_uid, stat_buf.st_gid);
+                        }
                         if (execle(script_abs, script_abs, NULL, env) < 0) {
                             slog(SLOG_ERROR, "execlp: %s", strerror(errno));
                         }

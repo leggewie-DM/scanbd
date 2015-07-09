@@ -1,10 +1,10 @@
 #! /bin/sh
 #
-# $Id: scanbd.debian 195 2014-11-15 18:06:47Z wimalopaan $
+# $Id: scanbd.debian 203 2015-02-04 08:05:20Z wimalopaan $
 #
 #  scanbd - KMUX scanner button daemon
 #
-#  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -159,9 +159,11 @@ case "$1" in
 		;;
 	esac
 	;;
+  status)
+	status_of_proc -p "$PIDFILE" "$DAEMON" "$NAME" && exit 0 || exit $?
+	;;
   *)
-	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
-	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
 	exit 3
 	;;
 esac

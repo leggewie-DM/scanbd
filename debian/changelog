@@ -1,3 +1,9 @@
+scanbd (1.4.1-7) unstable; urgency=medium
+
+  * postrm: properly purge symbolic links. Closes: #792104
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Sat, 11 Jul 2015 22:32:10 +0900
+
 scanbd (1.4.1-6) unstable; urgency=medium
 
   * release to unstable

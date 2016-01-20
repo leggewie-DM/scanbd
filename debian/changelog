@@ -1,3 +1,9 @@
+scanbd (1.4.1-8) unstable; urgency=medium
+
+  * control: allow and prefer compilation with libusb-1.0-0. Closes: #810457
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Wed, 20 Jan 2016 10:11:28 +0800
+
 scanbd (1.4.1-7) unstable; urgency=medium
 
   * postrm: properly purge symbolic links. Closes: #792104

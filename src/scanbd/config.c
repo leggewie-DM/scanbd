@@ -1,5 +1,5 @@
 /*
- * $Id: config.c 203 2015-02-04 08:05:20Z wimalopaan $
+ * $Id: config.c 213 2015-10-05 06:52:50Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
@@ -144,7 +144,6 @@ void cfg_do_parse(const char *config_file_name) {
         slog(SLOG_ERROR, "can't cd back to: %s", wd);
         exit(EXIT_FAILURE);
     }
-
 }
 
 char *make_script_path_abs(const char *script) {

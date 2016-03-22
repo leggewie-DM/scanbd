@@ -1,9 +1,9 @@
 /*
- * $Id: sane.c 190 2013-09-02 06:19:37Z wimalopaan $
+ * $Id: sane.c 213 2015-10-05 06:52:50Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ void get_sane_devices(void) {
         slog(SLOG_ERROR, "pthread_mutex_lock: %s", strerror(errno));
         return;
     }
-    SANE_Status sane_status = 0;
+    SANE_Status sane_status = SANE_STATUS_INVAL;
     sane_device_list = NULL;
     num_devices = 0;
     if ((sane_status = sane_get_devices(&sane_device_list, SANE_TRUE)) != SANE_STATUS_GOOD) {
@@ -194,7 +194,7 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
     // handle h
     // if option can't be found or other catastrophy happens, the
     // value 0 gets returned
-    sane_opt_value_t res;
+    sane_opt_value_t res = {};
     sane_option_value_init(&res);
 
     const SANE_Option_Descriptor* odesc = NULL;
@@ -206,7 +206,7 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
         unsigned long int value = 0;
         if ((unsigned int)odesc->size <= sizeof(long int)) {
             //if we can store it in an long int
-            SANE_Status status;
+            SANE_Status status = SANE_STATUS_INVAL;
             if ((status = sane_control_option(h, index, SANE_ACTION_GET_VALUE,
                                               &value, NULL)) != SANE_STATUS_GOOD) {
                 slog(SLOG_WARN, "Can't read value of %s: %s",
@@ -225,7 +225,7 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
     else if (odesc->type == SANE_TYPE_STRING) {
         res.str_value.str = calloc(odesc->size + 1, sizeof(char));
         assert(res.str_value.str != NULL);
-        SANE_Status status;
+        SANE_Status status = SANE_STATUS_INVAL;
         if ((status = sane_control_option(h, index, SANE_ACTION_GET_VALUE,
                                           res.str_value.str, NULL)) != SANE_STATUS_GOOD) {
             slog(SLOG_WARN, "Can't read value of %s: %s", odesc->name, sane_strstatus(status));
@@ -606,7 +606,8 @@ static void* sane_poll(void* arg) {
     sigfillset(&mask);
     pthread_sigmask(SIG_BLOCK, &mask, NULL);
     
-    static int si = 0;
+//    static int si = 0; // don't know why this was a static variable -> nonsense in the case of multiple sane_poll threads
+    int si = 0;
 
     // this thread uses the device and the san_thread_t datastructure
     // lock it
@@ -618,7 +619,7 @@ static void* sane_poll(void* arg) {
     }
     
     // open the device this thread should poll
-    SANE_Status status = 0;
+    SANE_Status status = SANE_STATUS_INVAL;
     if ((status = sane_open(st->dev->name, &st->h)) != SANE_STATUS_GOOD) {
         slog(SLOG_ERROR, "Can't open device %s: %s", st->dev->name, sane_strstatus(status));
         slog(SLOG_WARN, "abandon polling of %s", st->dev->name);
@@ -896,6 +897,7 @@ static void* sane_poll(void* arg) {
                         v = get_sane_option_value(st->h, st->functions[e].number);
                     }
                     else {
+                        slog(SLOG_DEBUG, "don't re-get the value");
                     }
                     if ((fdesc->type == SANE_TYPE_BOOL) || (fdesc->type == SANE_TYPE_INT) ||
                             (fdesc->type == SANE_TYPE_FIXED) || (odesc->type == SANE_TYPE_BUTTON)) {
@@ -1045,6 +1047,17 @@ static void* sane_poll(void* arg) {
                     }
                     else { // child
                         slog(SLOG_DEBUG, "exec for %s", script_abs);
+                        if (access(script_abs, F_OK | X_OK) < 0) {
+                            slog(SLOG_ERROR, "access: %s", strerror(errno));
+                        }
+                        struct stat stat_buf;
+                        if (stat(script_abs, &stat_buf) < 0) {
+                            slog(SLOG_ERROR, "stat: %s", strerror(errno));
+                        }
+                        else {
+                            slog(SLOG_DEBUG, "octal mode for %s: %lo", script_abs, stat_buf.st_mode);
+                            slog(SLOG_DEBUG, "uid: %ld, gid: %ld", stat_buf.st_uid, stat_buf.st_gid);
+                        }
                         if (execle(script_abs, script_abs, NULL, env) < 0) {
                             slog(SLOG_ERROR, "execlp: %s", strerror(errno));
                         }

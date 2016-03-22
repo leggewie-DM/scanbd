@@ -1,9 +1,9 @@
 #!/bin/bash
-# $Id: check_usb_autosuspend.sh 163 2013-01-10 15:51:48Z wimalopaan $
+# $Id: check_usb_autosuspend.sh 199 2014-12-11 20:52:17Z wimalopaan $
 #
 #  scanbd - KMUX scanner button daemon
 #
-#  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2008 - 2014  Wilhelm Meier (wilhelm.meier@fh-kl.de)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

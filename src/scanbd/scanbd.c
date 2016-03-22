@@ -1,9 +1,9 @@
 /*
- * $Id: scanbd.c 188 2013-08-29 19:30:24Z wimalopaan $
+ * $Id: scanbd.c 213 2015-10-05 06:52:50Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -445,7 +445,7 @@ int main(int argc, char** argv) {
         }
         // start the real saned
         slog(SLOG_DEBUG, "forking subprocess for saned");
-        pid_t spid = 0;
+        pid_t spid = -1;
         if ((spid = fork()) < 0) {
             slog(SLOG_ERROR, "fork for saned subprocess failed: %s", strerror(errno));
             exit(EXIT_FAILURE);
@@ -569,7 +569,7 @@ int main(int argc, char** argv) {
 
         if (!scanbd_options.foreground) {
             // don't try to write pid-file if forgrounded
-            int pid_fd = 0;
+            int pid_fd = -1;
             if ((pid_fd = open(pidfile, O_RDWR | O_CREAT | O_EXCL,
                                S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) < 0) {
                 slog(SLOG_ERROR, "Can't create pidfile %s : %s", pidfile, strerror(errno));
@@ -620,6 +620,7 @@ int main(int argc, char** argv) {
         if (pwd != NULL) {
             slog(SLOG_DEBUG, "drop privileges to uid: %d", pwd->pw_uid);
             if (seteuid(pwd->pw_uid) < 0) {
+                setgroups(0, NULL);
                 slog(SLOG_WARN, "Can't set the effective uid to %d", pwd->pw_uid);
             }
             else {
@@ -632,6 +633,12 @@ int main(int argc, char** argv) {
         dbus_init();
 
 #ifdef USE_SANE
+        if (getenv("SANE_CONFIG_DIR") != NULL) {
+            slog(SLOG_DEBUG, "SANE_CONFIG_DIR=%s", getenv("SANE_CONFIG_DIR"));
+        }
+        else {
+            slog(SLOG_WARN, "SANE_CONFIG_DIR not set");
+        }
         // Init SANE
         SANE_Int sane_version = 0;
         sane_init(&sane_version, 0);

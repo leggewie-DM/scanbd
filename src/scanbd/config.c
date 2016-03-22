@@ -1,9 +1,9 @@
 /*
- * $Id: config.c 191 2013-09-23 09:55:27Z wimalopaan $
+ * $Id: config.c 213 2015-10-05 06:52:50Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -144,7 +144,6 @@ void cfg_do_parse(const char *config_file_name) {
         slog(SLOG_ERROR, "can't cd back to: %s", wd);
         exit(EXIT_FAILURE);
     }
-
 }
 
 char *make_script_path_abs(const char *script) {

@@ -1,9 +1,9 @@
 /*
- * $Id: daemonize.c 154 2013-01-06 07:24:56Z wimalopaan $
+ * $Id: daemonize.c 213 2015-10-05 06:52:50Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #include "slog.h"
 
 void daemonize(void) {
-    pid_t pid;
+    pid_t pid = -1;
 
     if ((pid = fork()) < 0) {
         slog(SLOG_ERROR, "fork: %s", strerror(errno));
@@ -46,7 +46,7 @@ void daemonize(void) {
         exit(EXIT_SUCCESS);
     }
     // Child-Child
-    int ofd;
+    int ofd = -1;
     if ((ofd = open("/dev/null", O_RDWR)) < 0) {
         slog(SLOG_ERROR, "open /dev/null: %s", strerror(errno));
         exit(EXIT_FAILURE);

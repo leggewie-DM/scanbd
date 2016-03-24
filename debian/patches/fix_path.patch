@@ -29,23 +29,3 @@ Fix path of binary and configuration file for Debian package.
  
 -exec /usr/local/bin/scanbd -f -c /usr/local/etc/scanbd/scanbd.conf
 +exec /usr/sbin/scanbd -f -c /etc/scanbd/scanbd.conf
---- a/conf/scanbd.conf
-+++ b/conf/scanbd.conf
-@@ -57,7 +57,7 @@ global {
-         # the saned executable for manager-mode
-         saned   = "/usr/sbin/saned"
-         saned_opt  = {} # string-list
--        saned_env  = { "SANE_CONFIG_DIR=/usr/local/etc/scanbd" } # list of environment vars for saned
-+        saned_env  = { "SANE_CONFIG_DIR=/etc/scanbd" } # list of environment vars for saned
- 
-         # Scriptdir specifies where scanbd normally looks for scripts.
-         # The scriptdir option can be defined as: 
-@@ -88,7 +88,7 @@ global {
-         # as an absolute path
-         # Default is <libdir>/scanbd/scanbutond/backends
-         # Example
--	# scanbuttond_backends_dir = "/usr/local/lib/scanbd/scanbuttond/backends"
-+	# scanbuttond_backends_dir = "/usr/lib/scanbd/scanbuttond/backends"
- 
-         # poll timeout in [ms]
-         # (for polling the devices)

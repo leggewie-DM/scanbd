@@ -1,3 +1,15 @@
+scanbd (1.4.4-1) unstable; urgency=medium
+
+  * new upstream release
+  * patches:
+    - drop manpages.patch which has been applied upstream
+    - rebase fix_path.patch to newest upstream code base
+    - backport upstream commit r214 for debugging
+  * control: update to Debian Standard 3.9.7
+  * copyright: update copyright information
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Thu, 24 Mar 2016 10:35:56 +0100
+
 scanbd (1.4.1-8) unstable; urgency=medium
 
   * control: allow and prefer compilation with libusb-1.0-0. Closes: #810457

@@ -1,3 +1,14 @@
+scanbd (1.4.4-2) experimental; urgency=medium
+
+  * postrm: replace [ -x $fullpath ] with 'which $binary'
+  * patches: backport upstream commits r214 to r219
+    on top of r214 that we already have
+  * rules: stop erroring out on Wno-error=missing-field-initializers
+    jessie compiler chokes on these errors. needs investigation.
+  * control: add lsb-base to run-time dependencies
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Tue, 14 Feb 2017 00:50:01 +0800
+
 scanbd (1.4.4-1) unstable; urgency=medium
 
   * new upstream release

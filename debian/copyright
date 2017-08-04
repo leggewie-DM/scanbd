@@ -42,7 +42,7 @@ Comment: published without license statement, thus in the public domain
  http://lists.alioth.debian.org/pipermail/sane-devel/2011-November/029215.html
 
 Files: debian/*
-Copyright: 2012-2016 Rolf Leggewie <foss@rolf.leggewie.biz>
+Copyright: 2012-2017 Rolf Leggewie <foss@rolf.leggewie.biz>
                 2013 Philipp Matthias Hahn <pmhahn@debian.org>
 License: GPL-2+
 

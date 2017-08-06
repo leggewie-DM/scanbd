@@ -1,8 +1,9 @@
-# $Id: 99-saned.rules 218 2016-02-19 18:48:21Z wimalopaan $
+#
+# $Id: Makefile 241 2017-04-19 07:53:25Z wimalopaan $
 #
 #  scanbd - KMUX scanner button daemon
 #
-#  Copyright (C) 2008 - 2016  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+#  Copyright (C) 2008 - 2017 Wilhelm Meier (wilhelm.wm.meier@googlemail.com)
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,8 +20,13 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
-# change group to saned for sane devices
-# needed for saned to get scanner access
+include ../../Makefile.include
 
-ENV{libsane_matched}=="yes", GROUP="saned"
+.PHONY: all
 
+all: test01 test02
+
+test01: test01.o
+
+clean:
+	$(RM) -f test01 *.o *~

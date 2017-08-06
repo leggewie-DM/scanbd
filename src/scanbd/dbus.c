@@ -1,9 +1,9 @@
 /*
- * $Id: dbus.c 213 2015-10-05 06:52:50Z wimalopaan $
+ * $Id: dbus.c 241 2017-04-19 07:53:25Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2017 Wilhelm Meier (wilhelm.wm.meier@googlemail.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -61,8 +61,13 @@ void dbus_send_signal_argv(const char* signal_name, char** argv) {
     }
 
     if (argv != NULL) {
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
+        DBusMessageIter args;
+        DBusMessageIter sub;
+#else
         DBusMessageIter args = {};
         DBusMessageIter sub = {};
+#endif
         dbus_message_iter_init_append(signal, &args);
         if (dbus_message_iter_open_container(&args, DBUS_TYPE_ARRAY,
                                              DBUS_TYPE_STRING_AS_STRING,
@@ -118,7 +123,11 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
     }
 
     if (arg != NULL) {
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
+        DBusMessageIter args;
+#else
         DBusMessageIter args = {};
+#endif
         dbus_message_iter_init_append(signal, &args);
         slog(SLOG_DEBUG, "append string %s to signal %s", arg, signal_name);
         if (dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &arg) != TRUE) {
@@ -136,14 +145,25 @@ void dbus_send_signal(const char* signal_name, const char* arg) {
 }
 
 static void hook_device_ex(const char *param, const char *action_name, const char *dev_name) {
+    slog(SLOG_DEBUG, "hook_device_ex");
+    assert(dev_name);
+    assert(param);
+    assert(action_name);
+
+    slog(SLOG_DEBUG, "hook_device_ex: parameter: %s", param);
+    slog(SLOG_DEBUG, "hook_device_ex: action: %s", action_name);
+    slog(SLOG_DEBUG, "hook_device_ex: device: %s", dev_name);
+
     cfg_t* cfg_sec_global = cfg_getsec(cfg, C_GLOBAL);
     assert(cfg_sec_global);
     const char* script = cfg_getstr(cfg_sec_global, param);
 
     if (!script || (strlen(script) == 0)) {
+        slog(SLOG_INFO, "No hook script for inserting device: %s", dev_name);
         //script = SCANBD_NULL_STRING;
         return; // No hook script, nothing for us to do here.
-    }       
+    }
+    slog(SLOG_INFO, "Using hook script %s for inserting device: %s", script, dev_name);
 
     cfg_t* global_envs = cfg_getsec(cfg_sec_global, C_ENVIRONMENT);
     // number of env-vars =
@@ -233,6 +253,8 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
 
     char *script_abs = make_script_path_abs(script);
     assert(script_abs);
+    slog(SLOG_DEBUG, "Hook script path: %s for inserting device: %s", script_abs, dev_name);
+
     if (strcmp(script_abs, SCANBD_NULL_STRING) != 0) {
         pid_t cpid = -1;
         if ((cpid = fork()) < 0) {
@@ -267,6 +289,7 @@ static void hook_device_ex(const char *param, const char *action_name, const cha
 }
 
 static void hook_device_insert(const char *dev_name) {
+    slog(SLOG_DEBUG, "hook_device_insert");
     hook_device_ex(C_DEVICE_INSERT_SCRIPT, "insert", dev_name);
 }
 
@@ -291,9 +314,11 @@ static void hal_device_added(LibHalContext* ctx, const char *udi) {
 #else
         stop_scbtn_threads();
 #endif
-        slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+        slog(SLOG_DEBUG, "sane_exit");
         sane_exit();
+# endif
 #else
         scbtn_shutdown();
 #endif
@@ -307,7 +332,9 @@ static void hal_device_added(LibHalContext* ctx, const char *udi) {
 
         slog(SLOG_DEBUG, "sane_init");
 #ifdef USE_SANE
+# ifdef SANE_REINIT        
         sane_init(NULL, NULL);
+# endif
         get_sane_devices();
         start_sane_threads();
 #else
@@ -344,9 +371,11 @@ static void hal_device_removed(LibHalContext* ctx, const char *udi) {
     stop_scbtn_threads();
 #endif
 
-    slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_exit");
     sane_exit();
+# endif
 #else
     scbtn_shutdown();
 #endif
@@ -359,7 +388,9 @@ static void hal_device_removed(LibHalContext* ctx, const char *udi) {
 
     slog(SLOG_DEBUG, "sane_init");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
     sane_init(NULL, NULL);
+# endif
     get_sane_devices();
     start_sane_threads();
 #else
@@ -388,9 +419,11 @@ void dbus_signal_device_added(void) {
 #else
     stop_scbtn_threads();
 #endif // USE_SANE
-    slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_exit");
     sane_exit();
+# endif
 #else
     scbtn_shutdown();
 #endif // USE_SANE
@@ -403,8 +436,11 @@ void dbus_signal_device_added(void) {
     hook_device_insert("dbus device");
 
 #ifdef USE_SANE
+# ifdef SANE_REINIT
     slog(SLOG_DEBUG, "sane_init");
     sane_init(NULL, NULL);
+# endif
+    slog(SLOG_DEBUG, "get new devices");
     get_sane_devices();
     start_sane_threads();
 #else
@@ -436,9 +472,11 @@ void dbus_signal_device_removed(void) {
     stop_scbtn_threads();
 #endif
 
-    slog(SLOG_DEBUG, "sane_exit");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_exit");
     sane_exit();
+# endif
 #else
     scbtn_shutdown();
 #endif
@@ -450,9 +488,12 @@ void dbus_signal_device_removed(void) {
 
     hook_device_remove("dbus device");
 
-    slog(SLOG_DEBUG, "sane_init");
 #ifdef USE_SANE
+# ifdef SANE_REINIT
+    slog(SLOG_DEBUG, "sane_init");
     sane_init(NULL, NULL);
+# endif
+    slog(SLOG_DEBUG, "get new devices");
     get_sane_devices();
     start_sane_threads();
 #else
@@ -523,11 +564,15 @@ void sane_trigger_action_async(int device, int action) {
 }
 
 static void dbus_method_trigger(DBusMessage *message) {
-    DBusMessageIter args = {};
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
+        DBusMessageIter args;
+#else
+        DBusMessageIter args = {};
+#endif
 
     dbus_uint32_t device = -1;
     dbus_uint32_t action = -1;
-    
+
     if (!dbus_message_iter_init(message, &args)) {
         slog(SLOG_WARN, "trigger has no arguments");
         return;
@@ -565,7 +610,7 @@ static DBusHandlerResult message_func(DBusConnection *connection, DBusMessage *m
                                       void *user_data) {
     (void)connection;
     (void)user_data;
-    
+
     slog(SLOG_DEBUG, "message_func");
     DBusMessage* reply = NULL;
     if (dbus_message_is_method_call(message,
@@ -623,7 +668,7 @@ static void* dbus_thread(void* arg) {
     sigset_t mask;
     sigfillset(&mask);
     pthread_sigmask(SIG_BLOCK, &mask, NULL);
-    
+
     cfg_t* cfg_sec_global = NULL;
     cfg_sec_global = cfg_getsec(cfg, C_GLOBAL);
     assert(cfg_sec_global);
@@ -664,7 +709,7 @@ bool dbus_init(void) {
     if (!dbus_threads_init_default()) {
         slog(SLOG_ERROR, "DBus thread initialization failure");
     }
-    
+
     DBusError dbus_error;
     dbus_error_init(&dbus_error);
 
@@ -697,7 +742,7 @@ bool dbus_init(void) {
     }
 
     libhal_ctx_set_dbus_connection(hal_ctx, conn);
-    
+
     libhal_ctx_set_device_added(hal_ctx, hal_device_added);
     libhal_ctx_set_device_removed(hal_ctx, hal_device_removed);
 
@@ -733,14 +778,14 @@ void dbus_start_dbus_thread(void) {
         }
     }
     assert(conn);
-    
+
     if (!conn) {
         slog(SLOG_DEBUG, "No dbus connection");
         return;
     }
 
     DBusError dbus_error;
-    
+
     dbus_error_init(&dbus_error);
     if (dbus_connection_register_object_path(conn, SCANBD_DBUS_OBJECTPATH,
                                              &dbus_vtable, NULL) == FALSE) {
@@ -816,14 +861,18 @@ void dbus_call_method(const char* method, const char* value) {
     assert(msg);
 
     if (value != NULL) {
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
+        DBusMessageIter args;
+#else
         DBusMessageIter args = {};
+#endif
         dbus_message_iter_init_append(msg, &args);
         if (dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, value) != TRUE) {
             slog(SLOG_ERROR, "Can't compose message");
             return;
         }
     }
-    
+
     DBusPendingCall* pending = NULL;
 
     // send message and get a handle for a reply
@@ -852,11 +901,15 @@ void dbus_call_method(const char* method, const char* value) {
     }
     dbus_pending_call_unref(pending);
 
-    DBusMessageIter args = {};
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
+        DBusMessageIter args;
+#else
+        DBusMessageIter args = {};
+#endif
     if (!dbus_message_iter_init(reply, &args)) {
         slog(SLOG_INFO, "Reply has no arguments");
     }
-    
+
     return;
 }
 
@@ -886,7 +939,11 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
 
     dbus_uint32_t dev = device;
     dbus_uint32_t act = action;
-    DBusMessageIter args = {};
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
+        DBusMessageIter args;
+#else
+        DBusMessageIter args = {};
+#endif
     dbus_message_iter_init_append(msg, &args);
     if (dbus_message_iter_append_basic(&args, DBUS_TYPE_UINT32, &dev) != TRUE) {
         slog(SLOG_ERROR, "Can't compose message");
@@ -896,7 +953,7 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
         slog(SLOG_ERROR, "Can't compose message");
         return;
     }
-    
+
     DBusPendingCall* pending = NULL;
 
     // send message and get a handle for a reply
@@ -928,6 +985,6 @@ void dbus_call_trigger(unsigned int device, unsigned int action) {
     if (!dbus_message_iter_init(reply, &args)) {
         slog(SLOG_INFO, "Reply has no arguments");
     }
-    
+
     return;
 }

@@ -1,9 +1,9 @@
 /*
- * $Id: scanbd.h 203 2015-02-04 08:05:20Z wimalopaan $
+ * $Id: scanbd.h 241 2017-04-19 07:53:25Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2017 Wilhelm Meier (wilhelm.wm.meier@googlemail.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@
 #include "scanbd_dbus.h"
 #include "udev.h"
 
+// #define SANE_REINIT // do a sane_exit()/sane_init() sequence if new devices are found
 #define SANE_REINIT_TIMEOUT 3 // TODO: don't know if this is really neccessary
 
 #define SCANBUTTOND_ALARM_TIMEOUT 5 // reconfigure after this amount of seconds if

@@ -1,9 +1,9 @@
 /*
- * $Id: scanbd.c 213 2015-10-05 06:52:50Z wimalopaan $
+ * $Id: scanbd.c 241 2017-04-19 07:53:25Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2017 Wilhelm Meier (wilhelm.wm.meier@googlemail.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -165,7 +165,7 @@ void sig_term_handler(int signal) {
         if (!scanbd_options.foreground) {
             // reclaim the old uid (root) to unlink the pidfile
             // mostly neccessary if the pidfile lives in /var/run
-            if (seteuid((pid_t)0) < 0) {
+            if (seteuid((uid_t)0) < 0) {
                 slog(SLOG_WARN, "Can't acquire uid root to unlink pidfile %s : %s",
                      pidfile, strerror(errno));
                 slog(SLOG_DEBUG, "euid: %d, egid: %d",

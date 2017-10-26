@@ -3,11 +3,11 @@ Bug: https://sourceforge.net/p/scanbd/tickets/1/
 
 Scripts should live under /usr not in /etc
 
-diff --git a/src/scanbd/config.c b/src/scanbd/config.c
-index aa24779..5608be6 100644
---- a/src/scanbd/config.c
-+++ b/src/scanbd/config.c
-@@ -170,8 +170,8 @@ char *make_script_path_abs(const char *script) {
+Index: scanbd/src/scanbd/config.c
+===================================================================
+--- scanbd.orig/src/scanbd/config.c	2017-10-26 13:40:29.994416647 +0800
++++ scanbd/src/scanbd/config.c	2017-10-26 13:40:29.990416626 +0800
+@@ -169,8 +169,8 @@
          const char* scriptdir =  cfg_getstr(cfg_sec_global, C_SCRIPTDIR);
  
          if(!scriptdir || (strlen(scriptdir) == 0)) {

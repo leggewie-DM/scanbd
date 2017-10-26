@@ -1,4 +1,3 @@
-r214-r219.patch
 fix_path.patch
 fix_config.patch
 hardcode_scriptdir_path.patch

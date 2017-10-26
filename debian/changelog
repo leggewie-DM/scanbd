@@ -1,3 +1,13 @@
+scanbd (1.5.1-1) unstable; urgency=medium
+
+  * Imported upstream version 1.5.1
+    - fix crashes when plugging in USB devices. LP: #1500095
+  * patches: drop patch r214-219.patch as no longer necessary
+  * copyright: update to 2017
+  * control: update to Debian Standard 4.0.0
+
+ -- Rolf Leggewie <foss@rolf.leggewie.biz>  Thu, 26 Oct 2017 13:38:50 +0800
+
 scanbd (1.4.4-2) unstable; urgency=medium
 
   * postrm: replace [ -x $fullpath ] with 'which $binary'

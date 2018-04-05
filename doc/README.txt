@@ -1,8 +1,8 @@
-$Id: README.txt 202 2014-12-12 08:14:39Z wimalopaan $
+$Id: README.txt 241 2017-04-19 07:53:25Z wimalopaan $
 
 scanbd - KMUX scanner button daemon
 
-Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+Copyright (C) 2008 - 2016  Wilhelm Meier (wilhelm.meier@hs-kl.de)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ scanbd-manager scanbm restarts the polling by sending another dbus-signal (or th
 posix-signal SIGUSR2) to scanbd. scanbd now reenables polling of the devices.
 
 Scanbm is actually only a symbolic link to scanbd. Manager mode can be 
-activatied by calling scanbd as scanbm OR as scanbd -m as in previous version
+activatied by calling scanbd as scanbm OR as scanbd -m as in previous versions
 of scanbd.
 
 So all applications must be enabled to use network-scanning (even if the 
@@ -86,7 +86,7 @@ scanbd on different platforms. The list may not be exhaustive.
 
 1.1.1) Debian
 Needed packages on debian-based systems:
-libconfuse-dev libsane-dev libudev-dev libusb-dev
+libconfuse-dev libsane-dev libudev-dev libusb-dev libdbus-1-dev
 To use HAL instead of libudev you need:
 libhal-dev
 
@@ -119,7 +119,7 @@ USE_SCANBUTTOND=yes gmake -e -f Makefile.simple clean all
 1.1.4) Suse
 On Suse based systems you will need the same of similar packages installed as
 on Fedora, but: sane-backends-devel in Suse does not pull in all required 
-dependencies. Please make sure that you alse have installed:
+dependencies. Please make sure that you also have installed:
 libjpeg-devel
 libexif-devel
 libgphoto2-devel
@@ -133,6 +133,9 @@ libconfuse: $PORTSDIR/ports/devel/libconfuse
 dbus: $PORTSDIR/
 libusb1: $PORTSDIR/devel/libusb1
 sane-backends: $PORTSDIR/graphics/sane-backends
+
+1.1.6) Gentoo:
+You need to install dev-libs/confuse and media-gfx/sane-backends via portage.
 
 1.2) using autotools configure script
 
@@ -167,14 +170,14 @@ Please review Makefile.conf (after running gmake -f Makefile.simple) before
 running make again. Edit the file as appropriate to set your preferences.
 It is still possible to set variables on the make command line (e.g.
 USE_SCANBUTTOND=yes gmake -f Makefile.simple
-but setting yorpreferences in Makefile.conf is much easier.
+but setting your preferences in Makefile.conf is much easier.
 
 scanbd now uses libudev by default instead of HAL. 
 We recommend setting 
 USE_LIBUDEV =
 in Makefile.conf to disable udev.
 
-If you want to use the the scanbuttond backends enable
+If you want to use the scanbuttond backends enabled
 
 USE_SCANBUTTOND=yes
 
@@ -185,7 +188,7 @@ to useful places (or use
 
 gmake install
 
-to copy to /usr/local/bin and /usr/local/etc/scanbd).
+to copy to /usr/local/sbin and /usr/local/etc/scanbd).
 
 If you use the scanbuttond-backends, copy the shared-objects from 
 scanbuttond/backends directory to /usr/local/lib/scanbd/scanbuttond/backends
@@ -201,14 +204,14 @@ then restart dbus and hald.
 
 edit the saned-line to use scanbd as a wrapper, e.g.:
 ---
-sane-port stream tcp4 nowait saned /usr/local/bin/scanbm scanbm 
+sane-port stream tcp4 nowait saned /usr/local/sbin/scanbm scanbm 
 ---
 
 -or-
 
 (if the saned user can't open the devices, e.g. ubuntu)
 ---
-sane-port stream tcp4 nowait root /usr/local/bin/scanbm scanbm 
+sane-port stream tcp4 nowait root /usr/local/sbin/scanbm scanbm 
 ---
 
 If you installed the config files in a different location, you may have to add
@@ -234,7 +237,7 @@ service sane-port
         wait        = no
         user        = saned
         group       = scanner
-        server      = /usr/local/bin/scanbm
+        server      = /usr/local/sbin/scanbm
         server_args = scanbm
         disable     = no
 }
@@ -308,8 +311,7 @@ dll.conf as stated above (not include the net backend)
 
 e.g.:
 
-export SANE_CONFIG_DIR=/usr/local/etc/scanbd
-/usr/local/bin/scanbd 
+export SANE_CONFIG_DIR=/usr/local/etc/scanbd /usr/local/sbin/scanbd 
 (add a -c /usr/local/etc/scanbd/scanbd.conf if you installed in another
 directory than the one configured at compile time)
 
@@ -318,7 +320,7 @@ or use one of the startup files from the integration directory.
 If you are unfamiliar with scanbd it would be best to first try starting scanbd 
 in the foreground (-f) and in debug mode (-d):
 
-/usr/local/bin/scanbd -d7 -f -c /usr/local/etc/scanbd/scanbd.conf
+/usr/local/sbin/scanbd -d7 -f -c /usr/local/etc/scanbd/scanbd.conf
 
 Then you can watch scanbd recognizing all scanners and polling the options / 
 buttons. If you press the buttons or modify the function knob or insert/remove 

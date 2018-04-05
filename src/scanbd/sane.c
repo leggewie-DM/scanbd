@@ -1,9 +1,9 @@
 /*
- * $Id: sane.c 213 2015-10-05 06:52:50Z wimalopaan $
+ * $Id: sane.c 241 2017-04-19 07:53:25Z wimalopaan $
  *
  *  scanbd - KMUX scanner button daemon
  *
- *  Copyright (C) 2008 - 2015  Wilhelm Meier (wilhelm.meier@fh-kl.de)
+ *  Copyright (C) 2008 - 2017 Wilhelm Meier (wilhelm.wm.meier@googlemail.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
 
 #include "scanbd.h"
 #include "scanbd_dbus.h"
+
+#define CANCEL_TEST
 
 // all programm-global sane functions use this mutex to avoid races
 #ifdef PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
@@ -194,7 +196,12 @@ static sane_opt_value_t get_sane_option_value(SANE_Handle* h, int index) {
     // handle h
     // if option can't be found or other catastrophy happens, the
     // value 0 gets returned
+#if ((__STDC_VERSION__  - 0) < 201112L) || ((__GNUC__ - 0) < 5)
+    sane_opt_value_t res;
+#else
     sane_opt_value_t res = {};
+#endif
+
     sane_option_value_init(&res);
 
     const SANE_Option_Descriptor* odesc = NULL;
@@ -598,6 +605,11 @@ static void sane_find_matching_options(sane_thread_t* st, cfg_t* sec) {
 // TODO: refactor, this is awfull long!
 
 static void* sane_poll(void* arg) {
+#ifdef CANCEL_TEST
+    if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL) < 0) {
+        slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+    }
+#endif
     sane_thread_t* st = (sane_thread_t*)arg;
     assert(st != NULL);
     slog(SLOG_DEBUG, "sane_poll");
@@ -740,11 +752,23 @@ static void* sane_poll(void* arg) {
     
     slog(SLOG_DEBUG, "Start the polling for device %s", st->dev->name);
     while(true) {
-
-        slog(SLOG_DEBUG, "polling thread for %s cancellation point", st->dev->name);
+        slog(SLOG_DEBUG, "polling thread for %s, before cancellation point", st->dev->name);
+#ifdef CANCEL_TEST
+        if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL) < 0) {
+            slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+        }
+#endif
         // special cancellation point
         pthread_testcancel();
-        slog(SLOG_DEBUG, "polling device %s", st->dev->name);
+
+#ifdef CANCEL_TEST
+    if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL) < 0) {
+        slog(SLOG_ERROR, "pthread_setcancelstate: %s", strerror(errno));
+    }
+#endif
+    slog(SLOG_DEBUG, "polling thread for %s, after cancellation point", st->dev->name);
+
+    slog(SLOG_DEBUG, "polling device %s", st->dev->name);
 
         for(si = 0; si < st->num_of_options_with_scripts; si += 1) {
             const SANE_Option_Descriptor* odesc = NULL;
@@ -768,7 +792,7 @@ static void* sane_poll(void* arg) {
 
             sane_opt_value_t value;
             sane_option_value_init(&value);
-            // push the cleanup-handle to free the value storage
+            // push the cleanup-handler to free the value storage
             pthread_cleanup_push(sane_thread_cleanup_value, &value);
 
             // get the actual value
@@ -1046,6 +1070,27 @@ static void* sane_poll(void* arg) {
                         }
                     }
                     else { // child
+                        uid_t euid = geteuid();
+                        uid_t egid = getegid();
+                        if (seteuid(0) < 0) {
+                            slog(SLOG_DEBUG, "Can't seteuid root: %s", strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        if (setegid(0) < 0) {
+                            slog(SLOG_DEBUG, "Can't setegid root: %s", strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        slog(SLOG_DEBUG, "setgid to gid=%d", egid);
+                        if (setgid(egid) < 0) {
+                            slog(SLOG_DEBUG, "Can't setgid for gid=%d: %s", egid, strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        slog(SLOG_DEBUG, "setuid to uid=%d", euid);
+                        if (setuid(euid) < 0) {
+                            slog(SLOG_DEBUG, "Can't setuid for uid=%d : %s", euid, strerror(errno));
+                            exit(EXIT_FAILURE);
+                        } 
+                        
                         slog(SLOG_DEBUG, "exec for %s", script_abs);
                         if (access(script_abs, F_OK | X_OK) < 0) {
                             slog(SLOG_ERROR, "access: %s", strerror(errno));
@@ -1056,7 +1101,7 @@ static void* sane_poll(void* arg) {
                         }
                         else {
                             slog(SLOG_DEBUG, "octal mode for %s: %lo", script_abs, stat_buf.st_mode);
-                            slog(SLOG_DEBUG, "uid: %ld, gid: %ld", stat_buf.st_uid, stat_buf.st_gid);
+                            slog(SLOG_DEBUG, "file uid: %ld, file gid: %ld", stat_buf.st_uid, stat_buf.st_gid);
                         }
                         if (execle(script_abs, script_abs, NULL, env) < 0) {
                             slog(SLOG_ERROR, "execlp: %s", strerror(errno));
@@ -1136,7 +1181,7 @@ static void* sane_poll(void* arg) {
 
         // regain the mutex
         // because pthread_cleanup_push is a macro we can't use it here
-        // pthread_cleanup_push(sane_thread_cleanup_mutex, ((void*)&st->mutex));
+//         pthread_cleanup_push(sane_thread_cleanup_mutex, ((void*)&st->mutex));
         if (pthread_mutex_lock(&st->mutex) < 0) {
             // if we can't get the mutex, something is heavily wrong!
             slog(SLOG_ERROR, "pthread_mutex_lock: %s", strerror(errno));
@@ -1234,6 +1279,11 @@ void start_sane_threads(void) {
     }
     // allocate the thread list
     assert(sane_poll_threads == NULL);
+    
+    if (num_devices == 0) {
+        slog(SLOG_ERROR, "no devices, not starting any polling thread");
+        goto cleanup;
+    } 
     sane_poll_threads = (sane_thread_t*) calloc(num_devices, sizeof(sane_thread_t));
     if (sane_poll_threads == NULL) {
         slog(SLOG_ERROR, "Can't allocate memory for polling threads");

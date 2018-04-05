@@ -1,6 +1,6 @@
 Source: scanbd
 Section: misc
-Priority: extra
+Priority: optional
 Maintainer: Rolf Leggewie <foss@rolf.leggewie.biz>
 Build-Depends: debhelper (>= 9), autotools-dev,
  libconfuse-dev,
